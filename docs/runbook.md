@@ -335,6 +335,8 @@ kvm
 | `sudo apt update` fails on first try after Ubuntu VM boots | Ubuntu's `unattended-upgrades` service runs automatically at boot, holding the `apt` lock for 30–60 seconds. The cloud-init script starts `apt update` immediately, hitting a lock contention. | Normal behavior — `dnf` on AlmaLinux doesn't have this issue. Not a script bug. |
 | `vm run` shows double slash in download path (`cloudinit-vms//AlmaLinux-...`) | `ISO_DIR` had a trailing slash (`"$HOME/.../cloudinit-vms/"`) and the path concatenation added another `/` before the filename. | Remove trailing slash from `ISO_DIR` definition. |
 | `virsh desc` command fails in non-running VMs | The `--live` flag requires the domain to be running. After VM creation, the VM may still be booting when `virsh desc` runs. | Add `2>/dev/null \|\| true` to allow failure gracefully. |
+| Checksum mismatch proceeds instead of aborting | SHA256 verification fails on cached image, but the script only prints a warning and continues — corrupted image gets used to create the VM disk, cloud-init/networking breaks, IP detection loop runs indefinitely. | Remove the corrupted image and `exit 1` so a fresh download happens on retry. |
+| `vm destroy` leaves a zombie VM | `virsh shutdown` is asynchronous (sends ACPI signal, returns immediately). The `sleep 2` isn't enough for the VM to power off, so `virsh undefine` fails silently (`\|\| true`). Disk files get deleted anyway, but the VM stays running — diskless, throwing I/O errors. | Use `virsh destroy` (forced poweroff, synchronous) instead of `virsh shutdown` + `sleep 2`.
 
 ## Setup
 
