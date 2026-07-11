@@ -48,7 +48,7 @@ source ~/.bashrc
 # 4. Create your first VM
 
 ```sh
-vm run alma
+vm run
 ```
 
 ## Architecture
@@ -104,7 +104,7 @@ kvm-vm-provisioner/
 
 ![VM list screenshot](docs/Screenshot.png)
 
-* Create VMs
+* Create VMs using the distor name
 ```sh
 vm run alma
 ```
@@ -143,7 +143,6 @@ vm prune
 
 ## Design Decisions
 
-- **`vm ssh` intentionally removed** — users prefer plain `ssh user@ip` over an extra wrapper
 - **`confirm()` defaults to No** — safe default for destructive actions (destroy, prune)
 - **Version discovery** — live API for Ubuntu, mirror scrape for AlmaLinux, cached offline
 - **Two-phase prune** — separates orphan VM files from reusable cloud images
@@ -157,4 +156,4 @@ vm prune
 
 ## Related
 
-- [docs/runbook.md](docs/runbook.md) — full session walkthrough with errors and troubleshooting
+- [docs/runbook.md](docs/runbook.md) — full configuration and setup walkthrough with errors and troubleshooting
