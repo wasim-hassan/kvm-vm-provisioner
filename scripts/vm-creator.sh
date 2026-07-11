@@ -479,7 +479,10 @@ cmd_run() {
             echo "✅ Checksum verified"
         else
             echo "⚠️ Checksum mismatch — image may be corrupted."
-            echo "   Delete and re-download: rm '$ISO_DIR/$CLOUD_IMAGE_NAME'"
+            echo "   Removing corrupted image..."
+            rm -f "$ISO_DIR/$CLOUD_IMAGE_NAME"
+            echo "   Run 'vm run' again to download a fresh copy."
+            exit 1
         fi
     fi
 
@@ -586,9 +589,8 @@ cmd_stop() {
 _do_destroy() {
     local name="$1"
     virsh domstate "$name" 2>/dev/null | grep -q running && {
-        echo "🔴 Shutting down VM '$name'..."
-        virsh shutdown "$name" 2>/dev/null || virsh destroy "$name" 2>/dev/null || true
-        sleep 2
+        echo "🔴 Destroying VM '$name'..."
+        virsh destroy "$name" 2>/dev/null || true
     }
     virsh undefine "$name" 2>/dev/null || true
     rm -f "$ISO_DIR/$name.qcow2" "$ISO_DIR/$name-seed.iso"
