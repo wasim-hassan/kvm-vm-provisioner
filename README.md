@@ -96,7 +96,7 @@ kvm-vm-provisioner/
 ├── lib/
 │   └── common.sh                 # Bash logging helpers
 ├── docs/
-│       ├── Screenshot.png            # Terminal demo screenshot
+│   ├── Screenshot.png            # Terminal demo screenshot
 │   └── runbook.md                # Full session documentation
 ```
 
